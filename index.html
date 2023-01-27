@@ -1,0 +1,118 @@
+<html>
+    <head>
+        <title>Pet Website</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">        
+        <style>
+            h1{
+                font-size: 54px;
+            }
+            body{
+                background: #ececec
+            }
+            .animal-container{
+                padding: 30px;
+            }
+            .animal-card{
+                background: #fff;
+                border-radius: 4px;
+                padding: 15px;
+            }
+            .animal-card img{
+                width: 100%;
+                height: 400px;
+                object-fit: cover;
+            }
+            .animal-content{
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            .animal-content p{
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="text-center mt-3 mb-3">YOLO Pet</h1>
+        <div class="container">
+            <div class="row gx-5" id="htmlContent">
+                
+            </div>
+        </div>
+        <script>
+            'use strict'
+            let count = 1
+            const recordsPerScroll = 20
+
+            const images = { 
+                        dog: [
+                            'https://www.helpguide.org/wp-content/uploads/king-charles-spaniel-resting-head.jpg',
+                            'https://www.akc.org/wp-content/uploads/2018/05/samoyed-mother-dog-with-puppy-outdoors.jpg',
+                            'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/wolf-dog-breeds-siberian-husky-1570411330.jpg?crop=0.668xw:1.00xh;0.167xw,0&resize=1200:*',
+                            'https://post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/02/322868_1100-732x549.jpg',
+                            'https://cdn.britannica.com/72/234472-050-735B6214/maltese-dog.jpg'
+                        ],
+                        cat: [
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGKcUiNQHxbeqLeltghPGmIke59brLjUeZ_g&usqp=CAU',
+                            'https://media.wired.co.uk/photos/60c8730fa81eb7f50b44037e/3:2/w_3329,h_2219,c_limit/1521-WIRED-Cat.jpeg',
+                            'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/large-cat-breed-1553197454.jpg?crop=1.00xw:1.00xh;0,0&resize=640:*',
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkL4WZvGAk07aV5n1YRnUnR0xGmciI1FLLZw&usqp=CAU',
+                            'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-photos-of-cats-with-apple-1593203968.jpg'
+                        ],
+                        hamster: [
+                            'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aGFtc3RlcnxlbnwwfHwwfHw%3D&w=1000&q=80',
+                            'https://www.thesprucepets.com/thmb/95V35F0n6jACCZaTcoFkNgBKpG4=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/hamsters-overview-1238973-hero-aa6ddf6f33c64da1b12103c8ba556bc3.jpg',
+                            'https://play-lh.googleusercontent.com/5WKaWp5YngFYzZ0rzbCd3a0NiHglGsE0GkJIQVUncnQ7qtEAnrxXbSI6hstNRXStyEA=w240-h480-rw',
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBkkutGrNMmqI7I2k5Va3DBoQueqHtsPU3QA&usqp=CAU',
+                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9WWbdPo8_d7MtuoTrkvS95L4mhBTVRBkvLw&usqp=CAU'
+                        ]
+                    }
+
+            const fetchData = (scrollNum = 1) => {
+                fetch('data.json')
+                .then((res) => {
+                    return res.json()
+                })
+                .then(json => {
+                    const startingIndex = 20 * scrollNum - 20
+                    const endingIndex = 20 * scrollNum
+                    const data = json.slice(startingIndex, endingIndex)
+                    addToDocument(data)
+                    if (endingIndex == 80) {
+                        count = 1
+                    } else {
+                        count++
+                    }
+                });
+            }
+
+            const addToDocument = (data) => {
+                data.forEach((item, index) => {
+                    document.getElementById("htmlContent").innerHTML += `<div class="col-sm-6 col-12 animal-container">
+                        <a href="pet.html?id=${item.id}">
+                            <div class="animal-card">
+                                <img src='${images[item.type][index % 5]}'>
+                                <div class="animal-content">
+                                    <h2>${item.name}</h2>
+                                    <p style="text-transform: capitalize">Type: ${item.type}</p>
+                                    <p style="text-transform: capitalize">Age: ${item.age}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>`
+                })
+            }
+
+            const checkBottom = () => {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                    fetchData(count)
+                }
+            }
+
+            window.addEventListener('load', fetchData(count))
+            window.addEventListener('scroll', checkBottom)
+        </script>
+    </body>
+</html>
